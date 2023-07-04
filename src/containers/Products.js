@@ -1,12 +1,12 @@
-import React from "react";
-import { useSelector } from "react-redux"; // Importing useSelector hook from react-redux for accessing state from the Redux store
+import React, { useContext } from "react";
 
 import ProductItem from "../components/Products/ProductItem"; // Importing the ProductItem component from the components/Products/ProductItem.js file
+import { ProductsContext } from "../context/products-context";
 import "./Products.css";
 
 const Products = (props) => {
-  // Accessing the products array from the Redux store using useSelector hook
-  const productList = useSelector((state) => state.shop.products);
+  const productList = useContext(ProductsContext).products;
+
   return (
     <ul className="products-list">
       {productList.map((prod) => (

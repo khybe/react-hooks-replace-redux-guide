@@ -8,14 +8,10 @@ import FavoritesPage from "./containers/Favorites"; // Importing the FavoritesPa
 const App = (props) => {
   return (
     <React.Fragment>
-      {" "}
-      {/* Using a React.Fragment to group multiple components without adding an additional element to the DOM */}
       <Navigation />
       <main>
-        <Route path="/" component={ProductsPage} exact />{" "}
-        {/* Defining a route for the root path ("/") and rendering the ProductsPage component */}
-        <Route path="/favorites" component={FavoritesPage} />{" "}
-        {/* Defining a route for the "/favorites" path and rendering the FavoritesPage component */}
+        <Route path="/" component={ProductsPage} exact />
+        <Route path="/favorites" component={FavoritesPage} />
       </main>
     </React.Fragment>
   );
