@@ -4,6 +4,7 @@ import React, { useState } from "react";
 // Creating a new context object named "ProductsContext" with an initial value of an empty array and exporting it.
 export const ProductsContext = React.createContext({
   products: [],
+  toggleFav: (id) => {},
 });
 
 // Defining a functional component named "ProductsProvider" which takes in props as a parameter.
@@ -36,9 +37,24 @@ const ProductsProvider = (props) => {
     },
   ]);
 
+  const toggleFavorite = (productId) => {
+    setProductsList((currentProdList) => {
+      const prodIndex = currentProdList.findIndex((p) => p.id === productId);
+      const newFavStatus = !currentProdList[prodIndex].isFavorite;
+      const updatedProducts = [...currentProdList];
+      updatedProducts[prodIndex] = {
+        ...currentProdList[prodIndex],
+        isFavorite: newFavStatus,
+      };
+      return updatedProducts;
+    });
+  };
+
   // Returning the JSX code to provide the "productsList" value to the context and render its children.
   return (
-    <ProductsContext.Provider value={{ products: productsList }}>
+    <ProductsContext.Provider
+      value={{ products: productsList, toggleFav: toggleFavorite }}
+    >
       {props.children}
     </ProductsContext.Provider>
   );
