@@ -8,9 +8,9 @@ export const useStore = () => {
   // Defining a custom hook named useStore
   const setState = useState(globalState)[1]; // Retrieving the state and setState function from the global state using the useState hook
 
-  const dispatch = (actionIdentifier) => {
+  const dispatch = (actionIdentifier, payload) => {
     // Defining a dispatch function
-    const newState = actions[actionIdentifier](globalState); // Invoking the action function associated with the given actionIdentifier, passing the global state as an argument and obtaining a new state
+    const newState = actions[actionIdentifier](globalState, payload); // Invoking the action function associated with the given actionIdentifier, passing the global state as an argument and obtaining a new state
     globalState = { ...globalState, ...newState }; // Updating the global state with the new state
 
     for (const listener of listeners) {
