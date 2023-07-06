@@ -1,26 +1,39 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"; // Importing the useState and useEffect functions from the "react" library
 
-// Create a global state object
-let globalState = {};
+let globalState = {}; // Creating a global state object
+let listeners = []; // Creating an array to store listeners
+let actions = {}; // Creating an object to store actions
 
-// Create an array to store listeners
-let listeners = [];
+export const useStore = () => {
+  // Defining a custom hook named useStore
+  const setState = useState(globalState)[1]; // Retrieving the state and setState function from the global state using the useState hook
 
-// Create an object to store actions
-let actions = {};
+  const dispatch = (actionIdentifier) => {
+    // Defining a dispatch function
+    const newState = actions[actionIdentifier](globalState); // Invoking the action function associated with the given actionIdentifier, passing the global state as an argument and obtaining a new state
+    globalState = { ...globalState, ...newState }; // Updating the global state with the new state
 
-// Custom hook named useStore
-const useStore = () => {
-  // Retrieve the state and setState function from the global state using useState hook
-  const setState = useState(globalState)[1];
+    for (const listener of listeners) {
+      // Notifying all the listeners by invoking them with the updated global state
+      listener(globalState);
+    }
+  };
 
-  // Add the setState function to the listeners array when the component mounts
   useEffect(() => {
-    listeners.push(setState);
+    listeners.push(setState); // Adding the setState function to the listeners array when the component mounts
 
-    // Remove the setState function from the listeners array when the component unmounts
     return () => {
-      listeners = listeners.filter((li) => li !== setState);
+      listeners = listeners.filter((li) => li !== setState); // Removing the setState function from the listeners array when the component unmounts
     };
   }, [setState]);
+
+  return [globalState, dispatch]; // Returning the global state and dispatch function
+};
+
+export const initStore = (userActions, initialState) => {
+  // Initializing the store with userActions and initialState
+  if (initialState) {
+    globalState = { ...globalState, ...initialState }; // If an initialState is provided, updating the global state with the initial state
+  }
+  actions = { ...actions, ...userActions }; // Adding userActions to the actions object
 };
