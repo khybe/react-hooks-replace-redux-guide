@@ -4,7 +4,7 @@ let globalState = {}; // Creating a global state object
 let listeners = []; // Creating an array to store listeners
 let actions = {}; // Creating an object to store actions
 
-export const useStore = () => {
+export const useStore = (shouldListen = true) => {
   // Defining a custom hook named useStore
   const setState = useState(globalState)[1]; // Retrieving the state and setState function from the global state using the useState hook
 
@@ -20,12 +20,16 @@ export const useStore = () => {
   };
 
   useEffect(() => {
-    listeners.push(setState); // Adding the setState function to the listeners array when the component mounts
+    if (shouldListen) {
+      listeners.push(setState); // Adding the setState function to the listeners array when the component mounts
+    }
 
     return () => {
-      listeners = listeners.filter((li) => li !== setState); // Removing the setState function from the listeners array when the component unmounts
+      if (shouldListen) {
+        listeners = listeners.filter((li) => li !== setState); // Removing the setState function from the listeners array when the component unmounts
+      }
     };
-  }, [setState]);
+  }, [setState, shouldListen]);
 
   return [globalState, dispatch]; // Returning the global state and dispatch function
 };
